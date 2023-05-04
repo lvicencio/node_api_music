@@ -19,7 +19,19 @@ const getItems = async (req, res) => {
 };
 
 
-const getItem = (req, res) => {};
+const getItem = async (req, res) => {
+    try {
+        req = matchedData(req);
+        const {id} = req;
+        const data = await tracksModel.findById(id);
+
+        res.send({data});
+        
+    } catch (e) {
+        handleHttpError(res, "ERROR_EN_GET_ITEM");
+    }
+
+};
 
 
 const createItem = async (req, res) => {
@@ -45,8 +57,32 @@ const createItem = async (req, res) => {
 };
 
 
-const updateItem = (req, res) => {};
-const deleteItem = (req, res) => {};
+const updateItem = async(req, res) => {
+    try {
+
+        const {id, ...body} = matchedData(req);
+        const data = await tracksModel.findOneAndUpdate(id, body);
+        res.send({ data});
+ 
+ 
+     } catch (e) {
+         handleHttpError(res, "ERROR_EN_UPDATE_ITEM");
+     }
+
+};
+const deleteItem = async(req, res) => {
+
+    try {
+        req = matchedData(req);
+        const {id} = req;
+        const data = await tracksModel.deleteOne({_id:id});
+
+        res.send({data});
+        
+    } catch (e) {
+        handleHttpError(res, "ERROR_EN_DELETE_ITEM");
+    }
+};
 
 
 module.exports = { getItem, getItems, createItem, updateItem, deleteItem};
